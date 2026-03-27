@@ -595,13 +595,20 @@ class $AppDatabaseManager {
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// keep our AppDatabase open as long as our app is running don't auto dispose
+///
 
 @ProviderFor(appDatabase)
 final appDatabaseProvider = AppDatabaseProvider._();
 
+/// keep our AppDatabase open as long as our app is running don't auto dispose
+///
+
 final class AppDatabaseProvider
     extends $FunctionalProvider<AppDatabase, AppDatabase, AppDatabase>
     with $Provider<AppDatabase> {
+  /// keep our AppDatabase open as long as our app is running don't auto dispose
+  ///
   AppDatabaseProvider._()
     : super(
         from: null,

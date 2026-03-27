@@ -1,0 +1,65 @@
+import 'package:drift/drift.dart';
+import 'package:flutter_sqlite_database/data/db/app_database.dart';
+import 'package:flutter_sqlite_database/data/db/tables/note_table.dart';
+part 'note_daos.g.dart';
+
+@DriftAccessor(tables: [NoteTable])
+class NoteDao extends DatabaseAccessor<AppDatabase> with _$NoteDaoMixin {
+  NoteDao(super.db);
+
+  /// Return data class because our AppDatabase.g.dart  => generated data class that represents a row from your NoteTable.
+  // Return all values from the database
+  Future<List<NoteTableData>> getAllNotes() {
+    return select(db.noteTable).get();
+  }
+
+  /// watch all notes from the database
+  Stream<List<NoteTableData>> watchAllNotes() {
+    return (select(db.noteTable)..orderBy([
+          (t) => OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc),
+        ]))
+        .watch();
+  }
+
+  /// insert a record into the database
+  Future<int> insertNote(NoteTableCompanion note) {
+    return into(db.noteTable).insert(note);
+  }
+
+  /// get note by id from the database
+  Future<NoteTableData?> getNoteById(int id) {
+    return (select(
+      db.noteTable,
+    )..where((t) => t.id.equals(id))).getSingleOrNull();
+  }
+
+  ///update a note by id
+  Future<bool> updateNote(NoteTableCompanion note) {
+    return update(db.noteTable).replace(note);
+  }
+
+  /// delete a note by id
+  /// go()=> Deletes all rows matched by the set [where] clause (id)
+  Future<int> deleteNote(int id) {
+    return (delete(db.noteTable)..where((t) => t.id.equals(id))).go();
+  }
+
+  /// delete all notes
+  Future<int> deleteAllNotes() {
+    return delete(db.noteTable).go();
+  }
+
+  /// search notes by title or description
+  Stream<List<NoteTableData>> searchNotes(String query) {
+    final searchTerm = '%${query.toLowerCase()}%';
+    return (select(db.noteTable)
+          ..where(
+            (t) => t.title.like(searchTerm) | t.description.like(searchTerm),
+          )
+          ..orderBy([
+            (t) =>
+                OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc),
+          ]))
+        .watch();
+  }
+}
