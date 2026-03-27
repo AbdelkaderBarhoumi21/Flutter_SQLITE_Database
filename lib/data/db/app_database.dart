@@ -5,7 +5,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'app_database.g.dart';
 
-@riverpod
+/// keep our AppDatabase open as long as our app is running don't auto dispose
+///
+@Riverpod(keepAlive: true)
 AppDatabase appDatabase(Ref ref) {
   final db = AppDatabase();
   ref.onDispose(() {
@@ -14,6 +16,8 @@ AppDatabase appDatabase(Ref ref) {
   return db;
 }
 
+/// This the main DB class
+///
 @DriftDatabase(tables: [NoteTable])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
