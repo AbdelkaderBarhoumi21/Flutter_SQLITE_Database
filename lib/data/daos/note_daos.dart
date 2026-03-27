@@ -1,7 +1,14 @@
 import 'package:drift/drift.dart';
 import 'package:flutter_sqlite_database/data/db/app_database.dart';
 import 'package:flutter_sqlite_database/data/db/tables/note_table.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'note_daos.g.dart';
+
+@riverpod
+NoteDao noteDao(Ref ref) {
+  final db = ref.read(appDatabaseProvider);
+  return NoteDao(db);
+}
 
 @DriftAccessor(tables: [NoteTable])
 class NoteDao extends DatabaseAccessor<AppDatabase> with _$NoteDaoMixin {

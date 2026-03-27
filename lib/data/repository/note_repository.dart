@@ -1,8 +1,16 @@
 import 'package:flutter_sqlite_database/data/daos/note_daos.dart';
 import 'package:flutter_sqlite_database/data/db/app_database.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+part 'note_repository.g.dart';
+
+@riverpod
+NoteRepository noteRepository(Ref ref) {
+  final noteDao = ref.read(noteDaoProvider);
+  return NoteRepository(noteDao: noteDao);
+}
 
 class NoteRepository {
-  NoteRepository(this.noteDao);
+  NoteRepository({required this.noteDao});
   NoteDao noteDao;
 
   /// Get all notes from the database
