@@ -35,6 +35,7 @@ class _CreateNoteViewState extends ConsumerState<CreateNoteView> {
 
       // insert the note
       ref.read(noteViewModelProvider.notifier).insertNote(title, description);
+      Navigator.pop(context);
     }
   }
 
