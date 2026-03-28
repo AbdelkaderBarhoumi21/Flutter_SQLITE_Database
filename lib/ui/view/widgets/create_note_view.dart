@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_sqlite_database/ui/view_models/note_view_model.dart';
 
 class CreateNoteView extends ConsumerStatefulWidget {
   const CreateNoteView({super.key});
@@ -26,12 +27,23 @@ class _CreateNoteViewState extends ConsumerState<CreateNoteView> {
     super.dispose();
   }
 
+  void _onSaveNote() {
+    final isValid = _formKey.currentState?.validate() ?? false;
+    if (isValid) {
+      final title = _titleController.text;
+      final description = _descriptionController.text;
+
+      // insert the note
+      ref.read(noteViewModelProvider.notifier).insertNote(title, description);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Create note ')),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: _onSaveNote,
         label: const Text('Save note'),
         icon: const Icon(Icons.save),
       ),

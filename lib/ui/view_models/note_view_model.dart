@@ -2,6 +2,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sqlite_database/data/repository/note_repository.dart';
 import 'package:flutter_sqlite_database/ui/view_models/state/note_state.dart';
 
+final noteViewModelProvider = NotifierProvider<NoteViewModel, NoteState>(() {
+  return NoteViewModel();
+});
+
 class NoteViewModel extends Notifier<NoteState> {
   @override
   NoteState build() {
