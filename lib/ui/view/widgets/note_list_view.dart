@@ -20,8 +20,23 @@ class _NoteListViewState extends ConsumerState<NoteListView> {
     super.initState();
   }
 
+  void _stateListener() {
+    ref.listen(noteViewModelProvider.select((value) => value.isNoteCreated), (
+      previous,
+      next,
+    ) {
+      // previous => old value and next the new value
+      // isNoteCreated old value =false and new value = true
+      if (next) {
+        // refresh note list
+        ref.read(noteViewModelProvider.notifier).getAllNotes();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    _stateListener();
     return Scaffold(
       appBar: AppBar(title: const Text('Notes list')),
       body: NoteListWidget(),

@@ -8,6 +8,7 @@ abstract class NoteState with _$NoteState {
   factory NoteState({
     @Default(false) bool isLoading,
     @Default([]) List<NoteModel> notes,
+    @Default(false) bool isNoteCreated,
     NoteModel? note,
     String? error,
   }) = _NoteState;

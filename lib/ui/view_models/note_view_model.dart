@@ -35,12 +35,12 @@ class NoteViewModel extends Notifier<NoteState> {
   }
 
   Future<void> insertNote(String title, String description) async {
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(isLoading: true, isNoteCreated: false, error: null);
     try {
       final repo = ref.read(noteRepositoryProvider);
 
       await repo.insertNote(title, description);
-      state = state.copyWith(isLoading: false);
+      state = state.copyWith(isLoading: false, isNoteCreated: true);
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }

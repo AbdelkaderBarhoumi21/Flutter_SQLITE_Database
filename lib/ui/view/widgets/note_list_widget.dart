@@ -10,8 +10,11 @@ class NoteListWidget extends ConsumerStatefulWidget {
 }
 
 class _NoteListWidgetState extends ConsumerState<NoteListWidget> {
+ 
+
   @override
   Widget build(BuildContext context) {
+  
     final notes = ref.watch(
       noteViewModelProvider.select((value) => value.notes),
     );
