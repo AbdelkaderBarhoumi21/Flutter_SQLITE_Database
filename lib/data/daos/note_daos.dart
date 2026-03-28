@@ -47,6 +47,7 @@ class NoteDao extends DatabaseAccessor<AppDatabase> with _$NoteDaoMixin {
 
   /// delete a note by id
   /// go()=> Deletes all rows matched by the set [where] clause (id)
+  /// Returns the amount of rows that were deleted by this statement
   Future<int> deleteNote(int id) {
     return (delete(db.noteTable)..where((t) => t.id.equals(id))).go();
   }

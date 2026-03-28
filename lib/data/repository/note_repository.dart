@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart';
 import 'package:flutter_sqlite_database/data/daos/note_daos.dart';
 import 'package:flutter_sqlite_database/data/db/app_database.dart';
 import 'package:flutter_sqlite_database/domain/models/note_model.dart';
@@ -42,8 +43,12 @@ class NoteRepository {
   }
 
   /// Insert a new note into the database
-  Future<int> insertNote(NoteTableCompanion note) async {
+  Future<int> insertNote(String title, String description) async {
     try {
+      final note = NoteTableCompanion(
+        title: Value(title),
+        description: Value(description),
+      );
       final data = await noteDao.insertNote(note);
       return data;
     } catch (e, st) {
@@ -62,9 +67,17 @@ class NoteRepository {
   }
 
   /// Update an existing note
-  Future<bool> updateNote(NoteTableCompanion note) async {
+  Future<bool> updateNote(String? title, String? description) async {
     try {
-      return await noteDao.updateNote(note);
+      if (title != null && description != null) {
+        final note = NoteTableCompanion(
+          title: Value(title),
+          description: Value(description),
+        );
+        return await noteDao.updateNote(note);
+      }
+
+      return false; // if title or desc is null do not update
     } catch (e, st) {
       throw Exception('Error updating note: $e\n$st');
     }
