@@ -1,5 +1,6 @@
 import 'package:flutter_sqlite_database/data/daos/note_daos.dart';
 import 'package:flutter_sqlite_database/data/db/app_database.dart';
+import 'package:flutter_sqlite_database/domain/models/note_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'note_repository.g.dart';
 
@@ -14,18 +15,27 @@ class NoteRepository {
   NoteDao noteDao;
 
   /// Get all notes from the database
-  Future<List<NoteTableData>> getAllNotes() async {
+  Future<List<NoteModel>> getAllNotes() async {
     try {
-      return await noteDao.getAllNotes();
+      final data = await noteDao.getAllNotes();
+      return data.map((e) => NoteModel.fromEntity(e)).toList();
     } catch (e, st) {
       throw Exception('Error fetching notes: $e\n$st');
     }
   }
 
   /// Watch all notes with real-time updates
-  Stream<List<NoteTableData>> watchAllNotes() {
+  Stream<List<NoteModel>> watchAllNotes() {
     try {
-      return noteDao.watchAllNotes();
+      final data = noteDao.watchAllNotes();
+      //First .map() - Stream mapping
+      //Second .map() - List mapping
+
+      return data
+          .map((e) => e.map((e) => NoteModel.fromEntity(e)).toList())
+          .handleError((e, st) {
+            throw Exception('Error watching notes after mapping :$e$st');
+          });
     } catch (e, st) {
       return Stream.error(Exception('Error watching notes: $e\n$st'));
     }
@@ -34,16 +44,18 @@ class NoteRepository {
   /// Insert a new note into the database
   Future<int> insertNote(NoteTableCompanion note) async {
     try {
-      return await noteDao.insertNote(note);
+      final data = await noteDao.insertNote(note);
+      return data;
     } catch (e, st) {
       throw Exception('Error inserting note: $e\n$st');
     }
   }
 
   /// Get a specific note by its ID
-  Future<NoteTableData?> getNoteById(int id) async {
+  Future<NoteModel?> getNoteById(int id) async {
     try {
-      return await noteDao.getNoteById(id);
+      final data = await noteDao.getNoteById(id);
+      return data != null ? NoteModel.fromEntity(data) : null;
     } catch (e, st) {
       throw Exception('Error fetching note by ID: $e\n$st');
     }
@@ -77,9 +89,16 @@ class NoteRepository {
   }
 
   /// Search notes by query string
-  Stream<List<NoteTableData>> searchNotes(String query) {
+  Stream<List<NoteModel>> searchNotes(String query) {
+    // try-catch handles errors when creating the stream,
+    // .handleError() handles errors during stream emission and mapping.
     try {
-      return noteDao.searchNotes(query);
+      final data = noteDao.searchNotes(query);
+      return data
+          .map((e) => e.map((e) => NoteModel.fromEntity(e)).toList())
+          .handleError((e, st) {
+            throw Exception('Error searching notes after mapping :$e$st');
+          });
     } catch (e, st) {
       return Stream.error(Exception('Error searching notes: $e\n$st'));
     }
