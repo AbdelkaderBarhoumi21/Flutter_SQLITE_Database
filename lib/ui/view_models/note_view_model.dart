@@ -62,7 +62,7 @@ class NoteViewModel extends Notifier<NoteState> {
         description: description,
         isCompleted: isCompleted,
       );
-      state = state.copyWith(isLoading: false);
+      state = state.copyWith(isLoading: false, isNoteUpdated: true);
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }
