@@ -39,11 +39,7 @@ class _EditNoteViewState extends ConsumerState<EditNoteView> {
       final description = _descriptionController.text.trim();
       ref
           .read(noteViewModelProvider.notifier)
-          .updateNote(
-            id: widget.noteId,
-            title: title,
-            description: description,
-          );
+          .patchNote(id: widget.noteId, title: title, description: description);
     }
   }
 
@@ -56,6 +52,7 @@ class _EditNoteViewState extends ConsumerState<EditNoteView> {
       // isNoteUpdated old value =false and new value = true
       if (next) {
         // refresh note list
+        ref.read(noteViewModelProvider.notifier).getNoteById(widget.noteId);
         ref.read(noteViewModelProvider.notifier).getAllNotes();
       }
     });
@@ -118,7 +115,11 @@ class _EditNoteViewState extends ConsumerState<EditNoteView> {
                   children: [
                     Checkbox.adaptive(
                       value: isCompleted,
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        ref
+                            .read(noteViewModelProvider.notifier)
+                            .patchNote(id: widget.noteId, isCompleted: value);
+                      },
                     ),
                     const Text('Mark as completed'),
                   ],

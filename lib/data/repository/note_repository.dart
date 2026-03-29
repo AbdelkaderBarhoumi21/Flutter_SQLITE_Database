@@ -86,6 +86,27 @@ class NoteRepository {
     }
   }
 
+  /// patch note by id
+  Future<int> patchNote({
+    required int id,
+    String? title,
+    String? description,
+    bool? isCompleted,
+  }) async {
+    try {
+      final note = NoteTableCompanion(
+        id: Value(id),
+        title: Value.absentIfNull(title),
+        description: Value.absentIfNull(description),
+        isCompleted: Value.absentIfNull(isCompleted),
+      );
+      final data = await noteDao.patchNote(note);
+      return data;
+    } catch (e, st) {
+      throw Exception('Error updating note: $e\n$st');
+    }
+  }
+
   /// Delete a note by its ID
   Future<int> deleteNote(int id) async {
     try {

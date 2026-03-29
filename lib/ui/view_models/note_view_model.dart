@@ -72,6 +72,32 @@ class NoteViewModel extends Notifier<NoteState> {
     }
   }
 
+  Future<void> patchNote({
+    required int id,
+    String? title,
+    String? description,
+    bool? isCompleted,
+  }) async {
+    state = state.copyWith(isLoading: true, isNoteUpdated: false, error: null);
+    try {
+      final repo = ref.read(noteRepositoryProvider);
+
+      await repo.patchNote(
+        id: id,
+        title: title,
+        description: description,
+        isCompleted: isCompleted,
+      );
+      state = state.copyWith(isLoading: false, isNoteUpdated: true);
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        isNoteUpdated: false,
+        error: e.toString(),
+      );
+    }
+  }
+
   Future<void> deleteNote(int id) async {
     state = state.copyWith(isLoading: true, error: null);
     try {
