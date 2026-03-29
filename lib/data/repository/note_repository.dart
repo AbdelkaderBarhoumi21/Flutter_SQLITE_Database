@@ -67,17 +67,20 @@ class NoteRepository {
   }
 
   /// Update an existing note
-  Future<bool> updateNote(String? title, String? description) async {
+  Future<bool> updateNote({
+    required int id,
+    String? title,
+    String? description,
+    bool? isCompleted,
+  }) async {
     try {
-      if (title != null && description != null) {
-        final note = NoteTableCompanion(
-          title: Value(title),
-          description: Value(description),
-        );
-        return await noteDao.updateNote(note);
-      }
-
-      return false; // if title or desc is null do not update
+      final note = NoteTableCompanion(
+        id: Value(id),
+        title: Value.absentIfNull(title),
+        description: Value.absentIfNull(description),
+        isCompleted: Value.absentIfNull(isCompleted ?? false),
+      );
+      return await noteDao.updateNote(note);
     } catch (e, st) {
       throw Exception('Error updating note: $e\n$st');
     }

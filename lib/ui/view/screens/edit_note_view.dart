@@ -32,7 +32,21 @@ class _EditNoteViewState extends ConsumerState<EditNoteView> {
     super.dispose();
   }
 
-  void _onUpdateNote() async {}
+  void _onUpdateNote() async {
+    final isValid = _formKey.currentState?.validate() ?? false;
+    if (isValid) {
+      final title = _titleController.text.trim();
+      final description = _descriptionController.text.trim();
+      ref
+          .read(noteViewModelProvider.notifier)
+          .updateNote(
+            id: widget.noteId,
+            title: title,
+            description: description,
+          );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final note = ref.watch(noteViewModelProvider.select((state) => state.note));
@@ -40,6 +54,7 @@ class _EditNoteViewState extends ConsumerState<EditNoteView> {
     final description = note?.description ?? '';
     _titleController.text = title;
     _descriptionController.text = description;
+    final isCompleted = note?.isCompleted ?? false;
     return Scaffold(
       appBar: AppBar(title: const Text('Edit note')),
       floatingActionButton: FloatingActionButton.extended(
@@ -82,6 +97,16 @@ class _EditNoteViewState extends ConsumerState<EditNoteView> {
                     }
                     return null;
                   },
+                ),
+                SizedBox(height: 18),
+                Row(
+                  children: [
+                    Checkbox.adaptive(
+                      value: isCompleted,
+                      onChanged: (value) {},
+                    ),
+                    const Text('Mark as completed'),
+                  ],
                 ),
               ],
             ),

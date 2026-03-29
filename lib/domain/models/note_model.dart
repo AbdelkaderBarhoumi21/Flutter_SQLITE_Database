@@ -8,6 +8,7 @@ abstract class NoteModel with _$NoteModel {
     required int id,
     required String title,
     String? description,
+    @Default(false) bool isCompleted,
     required String createdAt,
   }) = _NoteModel;
 
@@ -15,6 +16,7 @@ abstract class NoteModel with _$NoteModel {
     id: note.id,
     title: note.title,
     description: note.description,
+    isCompleted: note.isCompleted,
     createdAt: formatDateTimeDifference(note.createdAt),
   );
 }
