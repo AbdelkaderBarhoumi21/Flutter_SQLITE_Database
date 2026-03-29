@@ -47,8 +47,23 @@ class _EditNoteViewState extends ConsumerState<EditNoteView> {
     }
   }
 
+  void _stateListener() {
+    ref.listen(noteViewModelProvider.select((value) => value.isNoteUpdated), (
+      previous,
+      next,
+    ) {
+      // previous => old value and next the new value
+      // isNoteUpdated old value =false and new value = true
+      if (next) {
+        // refresh note list
+        ref.read(noteViewModelProvider.notifier).getAllNotes();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    _stateListener();
     final note = ref.watch(noteViewModelProvider.select((state) => state.note));
     final title = note?.title ?? '';
     final description = note?.description ?? '';

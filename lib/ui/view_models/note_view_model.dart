@@ -52,19 +52,23 @@ class NoteViewModel extends Notifier<NoteState> {
     String? description,
     bool? isCompleted,
   }) async {
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(isLoading: true, isNoteUpdated: false, error: null);
     try {
       final repo = ref.read(noteRepositoryProvider);
 
-      await repo.updateNote(
+      final isNoteUpdated = await repo.updateNote(
         id: id,
         title: title,
         description: description,
         isCompleted: isCompleted,
       );
-      state = state.copyWith(isLoading: false, isNoteUpdated: true);
+      state = state.copyWith(isLoading: false, isNoteUpdated: isNoteUpdated);
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
+      state = state.copyWith(
+        isLoading: false,
+        isNoteUpdated: false,
+        error: e.toString(),
+      );
     }
   }
 
