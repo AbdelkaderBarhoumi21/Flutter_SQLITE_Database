@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_sqlite_database/ui/view/widgets/create_note_view.dart';
+import 'package:flutter_sqlite_database/ui/view/screens/create_note_view.dart';
 import 'package:flutter_sqlite_database/ui/view/widgets/note_list_widget.dart';
 import 'package:flutter_sqlite_database/ui/view_models/note_view_model.dart';
 

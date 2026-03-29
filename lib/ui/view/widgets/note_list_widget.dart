@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_sqlite_database/ui/view/screens/edit_note_view.dart';
 import 'package:flutter_sqlite_database/ui/view_models/note_view_model.dart';
 
 class NoteListWidget extends ConsumerStatefulWidget {
@@ -10,11 +11,8 @@ class NoteListWidget extends ConsumerStatefulWidget {
 }
 
 class _NoteListWidgetState extends ConsumerState<NoteListWidget> {
- 
-
   @override
   Widget build(BuildContext context) {
-  
     final notes = ref.watch(
       noteViewModelProvider.select((value) => value.notes),
     );
@@ -25,6 +23,17 @@ class _NoteListWidgetState extends ConsumerState<NoteListWidget> {
         return ListTile(
           title: Text(note.title),
           subtitle: Text(note.description ?? ' Description is empty'),
+          trailing: IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => EditNoteView(noteId: note.id),
+                ),
+              );
+            },
+            icon: Icon(Icons.edit),
+          ),
           onTap: () {},
         );
       },
