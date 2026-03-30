@@ -38,7 +38,63 @@ class _NoteListViewState extends ConsumerState<NoteListView> {
   Widget build(BuildContext context) {
     _stateListener();
     return Scaffold(
-      appBar: AppBar(title: const Text('Notes list')),
+      appBar: AppBar(
+        title: const Text('Notes list'),
+        actions: [
+          MenuAnchor(
+            builder: (context, controller, child) {
+              return IconButton(
+                onPressed: () {
+                  if (controller.isOpen) {
+                    controller.close();
+                  } else {
+                    controller.open();
+                  }
+                },
+                icon: const Icon(Icons.more_vert),
+              );
+            },
+            menuChildren: [
+              MenuItemButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text('Clear notes'),
+                        content: const Text(
+                          'Are you sure you want to clear all notes?',
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, false),
+                            child: Text('Cancel'),
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue,
+                              foregroundColor: Colors.white,
+                            ),
+                            onPressed: () {
+                              ref
+                                  .read(noteViewModelProvider.notifier)
+                                  .deleteAllNote();
+                              Navigator.pop(context, true);
+                            },
+                            child: const Text('Clear'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                child: const Text('Clear notes'),
+              ),
+            ],
+          ),
+        ],
+      ),
+
       body: NoteListWidget(),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => Navigator.push(
