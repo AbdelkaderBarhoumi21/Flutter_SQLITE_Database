@@ -75,14 +75,14 @@ class _NoteListViewState extends ConsumerState<NoteListView> {
                               backgroundColor: Colors.blue,
                               foregroundColor: Colors.white,
                             ),
-                            onPressed: () {
-                              ref
+                            onPressed: () async {
+                              Navigator.pop(context, true);
+                              await ref
                                   .read(noteViewModelProvider.notifier)
                                   .deleteAllNote();
                               ref
                                   .read(noteViewModelProvider.notifier)
                                   .getAllNotes();
-                              Navigator.pop(context, true);
                             },
                             child: const Text('Clear'),
                           ),
