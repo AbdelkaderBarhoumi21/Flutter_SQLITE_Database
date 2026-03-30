@@ -79,6 +79,9 @@ class _NoteListViewState extends ConsumerState<NoteListView> {
                               ref
                                   .read(noteViewModelProvider.notifier)
                                   .deleteAllNote();
+                              ref
+                                  .read(noteViewModelProvider.notifier)
+                                  .getAllNotes();
                               Navigator.pop(context, true);
                             },
                             child: const Text('Clear'),
