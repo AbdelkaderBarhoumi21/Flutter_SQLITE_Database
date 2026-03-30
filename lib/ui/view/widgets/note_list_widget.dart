@@ -20,21 +20,65 @@ class _NoteListWidgetState extends ConsumerState<NoteListWidget> {
       itemCount: notes.length,
       itemBuilder: (context, index) {
         final note = notes[index];
-        return ListTile(
-          title: Text(note.title),
-          subtitle: Text(note.description ?? ' Description is empty'),
-          trailing: IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => EditNoteView(noteId: note.id),
-                ),
-              );
-            },
-            icon: Icon(Icons.edit),
+        return Dismissible(
+          key: Key(note.id.toString()),
+          background: Container(
+            color: Colors.red,
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.only(right: 20),
+            child: Icon(Icons.delete, color: Colors.white),
           ),
-          onTap: () {},
+          direction: DismissDirection.endToStart,
+          dismissThresholds: const {DismissDirection.endToStart: 0.5},
+          confirmDismiss: (direction) async {
+            return await showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Text('Delete note'),
+                  content: const Text(
+                    'Are you sure you want to delete this note?',
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: Text('Cancel'),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context, true);
+                      },
+                      child: const Text('Delete'),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+          onDismissed: (direction) {
+            ref.read(noteViewModelProvider.notifier).deleteNote(note.id);
+          },
+
+          child: ListTile(
+            title: Text(note.title),
+            subtitle: Text(note.description ?? ' Description is empty'),
+            trailing: IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => EditNoteView(noteId: note.id),
+                  ),
+                );
+              },
+              icon: Icon(Icons.edit),
+            ),
+            onTap: () {},
+          ),
         );
       },
     );
