@@ -48,6 +48,7 @@ class NoteDao extends DatabaseAccessor<AppDatabase> with _$NoteDaoMixin {
   /// patch the note by id
   /// write() => Writes all non-null fields from [entity] into the columns of all rows that match the [where] clause.
   /// The fields that are null on the [entity] object will not be changed by this operation, they will be ignored.
+  /// int =>Returns the amount of rows that have been affected by this operation.
   Future<int> patchNote(NoteTableCompanion note) {
     return (update(
       db.noteTable,
@@ -62,6 +63,7 @@ class NoteDao extends DatabaseAccessor<AppDatabase> with _$NoteDaoMixin {
   }
 
   /// delete all notes
+  /// int => Returns the amount of rows that were deleted by this statement directly
   Future<int> deleteAllNotes() {
     return delete(db.noteTable).go();
   }
