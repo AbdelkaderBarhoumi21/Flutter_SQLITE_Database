@@ -736,6 +736,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   );
   late final $NoteTableTable noteTable = $NoteTableTable(this);
   late final NoteDao noteDao = NoteDao(this as AppDatabase);
+  late final CategoryDao categoryDao = CategoryDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
