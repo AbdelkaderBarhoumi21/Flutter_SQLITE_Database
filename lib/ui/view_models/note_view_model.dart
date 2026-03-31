@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sqlite_database/data/repository/note_repository.dart';
 import 'package:flutter_sqlite_database/ui/view_models/state/note_state.dart';
@@ -7,9 +9,31 @@ final noteViewModelProvider = NotifierProvider<NoteViewModel, NoteState>(() {
 });
 
 class NoteViewModel extends Notifier<NoteState> {
+  StreamSubscription? _noteStreamSubscription;
+
   @override
   NoteState build() {
+    ref.onDispose(() {
+      _noteStreamSubscription?.cancel();
+    });
+    // watchAllNotes();
     return NoteState(notes: [], isLoading: true);
+  }
+
+  Future<void> watchAllNotes() async {
+    _noteStreamSubscription = ref
+        .read(noteRepositoryProvider)
+        .watchAllNotes()
+        .listen(
+          (notes) {
+            state = state.copyWith(notes: notes);
+          },
+          onError: (error, st) {
+            state = state.copyWith(
+              error: 'Failed to watch notes: error: $error, StackTrace: $st',
+            );
+          },
+        );
   }
 
   Future<void> getAllNotes() async {

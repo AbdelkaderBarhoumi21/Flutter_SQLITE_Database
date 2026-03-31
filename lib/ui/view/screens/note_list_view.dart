@@ -15,7 +15,9 @@ class _NoteListViewState extends ConsumerState<NoteListView> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(noteViewModelProvider.notifier).getAllNotes();
+      //ref.read(noteViewModelProvider.notifier).getAllNotes();
+      ref.read(noteViewModelProvider.notifier).watchAllNotes();
+      // but the issue every time this NoteListView complete building it will fetch every  time so maybe added in build in not view model is better
     });
     super.initState();
   }
@@ -29,7 +31,7 @@ class _NoteListViewState extends ConsumerState<NoteListView> {
       // isNoteCreated old value =false and new value = true
       if (next) {
         // refresh note list
-        ref.read(noteViewModelProvider.notifier).getAllNotes();
+        // ref.read(noteViewModelProvider.notifier).getAllNotes();
       }
     });
   }
@@ -80,9 +82,9 @@ class _NoteListViewState extends ConsumerState<NoteListView> {
                               await ref
                                   .read(noteViewModelProvider.notifier)
                                   .deleteAllNote();
-                              ref
-                                  .read(noteViewModelProvider.notifier)
-                                  .getAllNotes();
+                              // ref
+                              //     .read(noteViewModelProvider.notifier)
+                              //     .getAllNotes();
                             },
                             child: const Text('Clear'),
                           ),

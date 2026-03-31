@@ -53,7 +53,7 @@ class _EditNoteViewState extends ConsumerState<EditNoteView> {
       if (next) {
         // refresh note list
         ref.read(noteViewModelProvider.notifier).getNoteById(widget.noteId);
-        ref.read(noteViewModelProvider.notifier).getAllNotes();
+       // ref.read(noteViewModelProvider.notifier).getAllNotes();
       }
     });
   }
