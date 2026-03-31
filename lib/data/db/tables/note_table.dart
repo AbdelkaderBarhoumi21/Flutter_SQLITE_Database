@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:flutter_sqlite_database/data/db/tables/category_table.dart';
 
 class NoteTable extends Table {
   IntColumn get id => integer().autoIncrement()();
@@ -7,4 +8,11 @@ class NoteTable extends Table {
       text().nullable().withLength(min: 1, max: 100)();
   BoolColumn get isCompleted => boolean().withDefault(const Constant(false))();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+
+  // FK to category tables :  KeyAction.cascade => if delete category delete all notes related to this category
+  IntColumn get categoryId => integer().nullable().references(
+    CategoriesTable,
+    #id,
+    onDelete: KeyAction.cascade,
+  )();
 }
