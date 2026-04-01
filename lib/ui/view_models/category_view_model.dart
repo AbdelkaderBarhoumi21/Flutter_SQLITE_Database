@@ -16,6 +16,8 @@ class CategoryViewModel extends Notifier<CategoryState> {
     ref.onDispose(() {
       _categoryStreamSubscription?.cancel();
     });
+    // watchAllCategories() streams the categories in real-time, so we call it in a microtask to avoid blocking the build method.
+    Future.microtask(() => watchAllCategories());
     return CategoryState(isLoading: true, categories: []);
   }
 
@@ -26,7 +28,7 @@ class CategoryViewModel extends Notifier<CategoryState> {
         .watchAllCategories()
         .listen(
           (categories) {
-            state = state.copyWith(categories: categories, isLoading: false);
+            state = state.copyWith(categories: categories);
           },
           onError: (error, st) {
             state = state.copyWith(
