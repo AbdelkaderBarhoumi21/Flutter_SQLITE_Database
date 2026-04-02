@@ -22,8 +22,13 @@ AppDatabase appDatabase(Ref ref) {
 /// This the main DB class
 /// daos  mean => NoteDao get noteDao => NoteDao(this);
 /// Include this DAO in my database and give me a noteDao property to access it
-@DriftDatabase(tables: [NoteTable, CategoriesTable], daos: [NoteDao,CategoryDao])
+@DriftDatabase(
+  tables: [NoteTable, CategoriesTable],
+  daos: [NoteDao, CategoryDao],
+)
 class AppDatabase extends _$AppDatabase {
+  @override
+  int get schemaVersion => 2;
   AppDatabase() : super(_openConnection());
 
   static QueryExecutor _openConnection() {
@@ -31,5 +36,23 @@ class AppDatabase extends _$AppDatabase {
   }
 
   @override
-  int get schemaVersion => 1;
+  MigrationStrategy get migration => MigrationStrategy(
+    onCreate: (Migrator m) async {
+      // Executes when the database is opened for the first time.
+      // Creates all tables, triggers, views, indexes and everything else defined in the database, if they don't exist.
+      await m.createAll();
+    },
+    onUpgrade: (Migrator m, int from, int to) async {
+      if (from < 2) {
+        return m.createTable(categoriesTable);
+      }
+    },
+    beforeOpen: (details) async {
+      // This will be executed when the database is opened, and before the [onCreate] or [onUpgrade] callbacks are called.
+      // and before any other queries will be sent.
+      // it enables SQLite foreign key enforcement with PRAGMA foreign_keys=ON. By default SQLite ignores foreign key constraints, 
+      // so you have to enable it manually for each connection. This ensures that your database maintains referential integrity by enforcing foreign key constraints.
+      await customStatement('PRAGMA foreign_keys=ON');
+    },
+  );
 }
