@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_sqlite_database/ui/view/screens/edit_note_view.dart';
-import 'package:flutter_sqlite_database/ui/view_models/note_view_model.dart';
+import 'package:flutter_sqlite_database/ui/view/screens/edit_category_view.dart';
+import 'package:flutter_sqlite_database/ui/view_models/category_view_model.dart';
 
 class CategoryListWidget extends ConsumerStatefulWidget {
   const CategoryListWidget({super.key});
@@ -13,15 +13,15 @@ class CategoryListWidget extends ConsumerStatefulWidget {
 class _CategoryListWidgetState extends ConsumerState<CategoryListWidget> {
   @override
   Widget build(BuildContext context) {
-    final notes = ref.watch(
-      noteViewModelProvider.select((value) => value.notes),
+    final categories = ref.watch(
+      categoryViewModelProvider.select((value) => value.categories),
     );
     return ListView.builder(
-      itemCount: notes.length,
+      itemCount: categories.length,
       itemBuilder: (context, index) {
-        final note = notes[index];
+        final category = categories[index];
         return Dismissible(
-          key: Key(note.id.toString()),
+          key: Key(category.id.toString()),
           background: Container(
             color: Colors.red,
             alignment: Alignment.centerRight,
@@ -60,20 +60,18 @@ class _CategoryListWidgetState extends ConsumerState<CategoryListWidget> {
             );
           },
           onDismissed: (direction) {
-            ref.read(noteViewModelProvider.notifier).deleteNote(note.id);
+            ref
+                .read(categoryViewModelProvider.notifier)
+                .deleteCategory(category.id);
           },
 
           child: ListTile(
-            title: Text(note.title),
-            subtitle: Text(note.description ?? ' Description is empty'),
-            leading: Checkbox(value: note.isCompleted, onChanged: (value) {}),
+            title: Text(category.name),
             trailing: IconButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => EditNoteView(noteId: note.id),
-                  ),
+                  MaterialPageRoute(builder: (_) => EditCategoryView()),
                 );
               },
               icon: Icon(Icons.edit),
