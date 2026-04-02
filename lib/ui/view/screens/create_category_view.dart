@@ -93,7 +93,10 @@ class _CreateCategoryViewState extends ConsumerState<CreateCategoryView> {
                     );
                     return SizedBox(
                       height: 60,
-                      child: ListView.builder(
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        separatorBuilder: (context, index) =>
+                            SizedBox(width: 12),
                         itemCount: _colors.length,
                         itemBuilder: (context, index) {
                           final color = _colors[index];
