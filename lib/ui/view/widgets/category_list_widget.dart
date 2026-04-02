@@ -67,6 +67,15 @@ class _CategoryListWidgetState extends ConsumerState<CategoryListWidget> {
 
           child: ListTile(
             title: Text(category.name),
+            leading: CircleAvatar(
+              backgroundColor: Color(
+                int.parse(category.color.replaceAll('#', '0xFF')),
+              ),
+              child: Text(
+                category.name[0].toUpperCase(),
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
             trailing: IconButton(
               onPressed: () {
                 Navigator.push(
