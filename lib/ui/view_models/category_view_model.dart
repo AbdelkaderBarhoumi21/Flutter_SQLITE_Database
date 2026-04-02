@@ -58,17 +58,18 @@ class CategoryViewModel extends Notifier<CategoryState> {
     try {
       final repo = ref.read(categoriesRepositoryProvider);
       final category = await repo.getCategoryById(id);
-      state = state.copyWith(isLoading: false, category: category);
+      state = state.copyWith(isLoading: false, selectedCategory: category);
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
   /// Insert a new category.
-  Future<void> insertCategory(String name, String color) async {
+  Future<void> insertCategory(String name) async {
     state = state.copyWith(isLoading: true, isCreated: false, error: null);
     try {
       final repo = ref.read(categoriesRepositoryProvider);
+      final color = state.selectedColor;
       await repo.insertCategory(name, color);
       state = state.copyWith(isLoading: false, isCreated: true);
     } catch (e) {
@@ -140,13 +141,21 @@ class CategoryViewModel extends Notifier<CategoryState> {
   /// Delete all categories.
   /// Returns true if all categories were successfully deleted, false otherwise.
   Future<void> deleteAllCategories() async {
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(isLoading: true, error: null, isDeleted: false);
     try {
       final repo = ref.read(categoriesRepositoryProvider);
       await repo.deleteAllCategories();
-      state = state.copyWith(isLoading: false);
+      state = state.copyWith(isLoading: false, isDeleted: true);
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
+      state = state.copyWith(
+        isLoading: false,
+        error: e.toString(),
+        isDeleted: false,
+      );
     }
+  }
+
+  void setSelectedColor(String value) {
+    state = state.copyWith(selectedColor: value);
   }
 }
