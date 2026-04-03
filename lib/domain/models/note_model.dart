@@ -1,3 +1,4 @@
+import 'package:flutter_sqlite_database/data/db/app_database.dart';
 import 'package:flutter_sqlite_database/data/dto/note_with_category.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'note_model.freezed.dart';
@@ -22,9 +23,6 @@ abstract class NoteModel with _$NoteModel {
     if (note == null) {
       throw Exception('Note is null');
     }
-    if (category == null) {
-      throw Exception('Category is null');
-    }
     return NoteModel(
       id: note.id,
       title: note.title,
@@ -32,8 +30,20 @@ abstract class NoteModel with _$NoteModel {
       isCompleted: note.isCompleted,
       categoryId: note.categoryId ?? 1,
       createdAt: formatDateTimeDifference(note.createdAt),
-      categoryName:category.name,
-      categoryColor: category.color
+      categoryName: category?.name ?? '',
+      categoryColor: category?.color ?? '#2196F3',
+    );
+  }
+
+  /// Maps a raw NoteTableData (without category) to NoteModel
+  factory NoteModel.fromNoteData(NoteTableData data) {
+    return NoteModel(
+      id: data.id,
+      title: data.title,
+      description: data.description,
+      isCompleted: data.isCompleted,
+      categoryId: data.categoryId ?? 1,
+      createdAt: formatDateTimeDifference(data.createdAt),
     );
   }
 }

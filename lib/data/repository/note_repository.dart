@@ -19,7 +19,7 @@ class NoteRepository {
   Future<List<NoteModel>> getAllNotes() async {
     try {
       final data = await noteDao.getAllNotes();
-      return data.map((e) => NoteModel.fromEntity(e)).toList();
+      return data.map((e) => NoteModel.fromNoteData(e)).toList();
     } catch (e, st) {
       throw Exception('Error fetching notes: $e\n$st');
     }
@@ -31,7 +31,6 @@ class NoteRepository {
       //First .map() - Stream mapping
       //Second .map() - List mapping
       final data = noteDao.watchAllNotes();
-
       return data
           .map((e) => e.map((e) => NoteModel.fromEntity(e)).toList())
           .handleError((e, st) {
@@ -65,7 +64,7 @@ class NoteRepository {
   Future<NoteModel?> getNoteById(int id) async {
     try {
       final data = await noteDao.getNoteById(id);
-      return data != null ? NoteModel.fromEntity(data) : null;
+      return data != null ? NoteModel.fromNoteData(data) : null;
     } catch (e, st) {
       throw Exception('Error fetching note by ID: $e\n$st');
     }
@@ -137,7 +136,7 @@ class NoteRepository {
     try {
       final data = noteDao.searchNotes(query);
       return data
-          .map((e) => e.map((e) => NoteModel.fromEntity(e)).toList())
+          .map((e) => e.map((e) => NoteModel.fromNoteData(e)).toList())
           .handleError((e, st) {
             throw Exception('Error searching notes after mapping :$e$st');
           });
