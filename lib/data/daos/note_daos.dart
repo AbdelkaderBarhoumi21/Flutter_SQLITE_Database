@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:flutter_sqlite_database/data/db/app_database.dart';
 import 'package:flutter_sqlite_database/data/db/tables/note_table.dart';
+import 'package:flutter_sqlite_database/data/dto/note_with_category.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'note_daos.g.dart';
 
@@ -21,12 +22,30 @@ class NoteDao extends DatabaseAccessor<AppDatabase> with _$NoteDaoMixin {
   }
 
   /// watch all notes from the database
-  Stream<List<NoteTableData>> watchAllNotes() {
-    return (select(db.noteTable)..orderBy([
-          (t) => OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc),
-        ]))
-        .watch();
+  Stream<List<NoteWithCategory>> watchAllNotes() {
+    final query = select(noteTable).join([
+      leftOuterJoin(
+        categoriesTable,
+        categoriesTable.id.equalsExp(noteTable.categoryId),
+      ),
+    ])..orderBy([OrderingTerm.desc(noteTable.createdAt)]);
+
+    return query.watch().map((rows) {
+      return rows.map((row) {
+        return NoteWithCategory(
+          note: row.readTable(noteTable),
+          category: row.readTableOrNull(categoriesTable),
+        );
+      }).toList();
+    });
   }
+  // /// watch all notes from the database
+  // Stream<List<NoteTableData>> watchAllNotes() {
+  //   return (select(db.noteTable)..orderBy([
+  //         (t) => OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc),
+  //       ]))
+  //       .watch();
+  // }
 
   /// insert a record into the database
   Future<int> insertNote(NoteTableCompanion note) {

@@ -28,9 +28,9 @@ class NoteRepository {
   /// Watch all notes with real-time updates
   Stream<List<NoteModel>> watchAllNotes() {
     try {
-      final data = noteDao.watchAllNotes();
       //First .map() - Stream mapping
       //Second .map() - List mapping
+      final data = noteDao.watchAllNotes();
 
       return data
           .map((e) => e.map((e) => NoteModel.fromEntity(e)).toList())

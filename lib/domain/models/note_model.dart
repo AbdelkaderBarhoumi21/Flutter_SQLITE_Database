@@ -1,4 +1,4 @@
-import 'package:flutter_sqlite_database/data/db/app_database.dart';
+import 'package:flutter_sqlite_database/data/dto/note_with_category.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'note_model.freezed.dart';
 
@@ -7,20 +7,35 @@ abstract class NoteModel with _$NoteModel {
   factory NoteModel({
     required int id,
     required String title,
-    @Default(1) int categoryId,
+    required String createdAt,
     String? description,
     @Default(false) bool isCompleted,
-    required String createdAt,
+    @Default(1) int categoryId,
+    @Default('') String categoryName,
+    @Default('#2196F3') String categoryColor,
   }) = _NoteModel;
 
-  factory NoteModel.fromEntity(NoteTableData note) => NoteModel(
-    id: note.id,
-    categoryId: note.categoryId ?? 1,
-    title: note.title,
-    description: note.description,
-    isCompleted: note.isCompleted,
-    createdAt: formatDateTimeDifference(note.createdAt),
-  );
+  factory NoteModel.fromEntity(NoteWithCategory data) {
+    final note = data.note;
+    final category = data.category;
+
+    if (note == null) {
+      throw Exception('Note is null');
+    }
+    if (category == null) {
+      throw Exception('Category is null');
+    }
+    return NoteModel(
+      id: note.id,
+      title: note.title,
+      description: note.description,
+      isCompleted: note.isCompleted,
+      categoryId: note.categoryId ?? 1,
+      createdAt: formatDateTimeDifference(note.createdAt),
+      categoryName:category.name,
+      categoryColor: category.color
+    );
+  }
 }
 
 String formatDateTimeDifference(DateTime date) {
