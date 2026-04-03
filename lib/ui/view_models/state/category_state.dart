@@ -11,8 +11,8 @@ abstract class CategoryState with _$CategoryState {
     @Default(false) bool isUpdated,
     @Default(false) bool isDeleted,
     @Default([]) List<CategoryModel> categories,
-
     @Default('#2196F3') String selectedColor,
+    int? selectedCategoryId,
     CategoryModel? selectedCategory,
     String? error,
   }) = _CategoryState;

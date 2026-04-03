@@ -158,4 +158,11 @@ class CategoryViewModel extends Notifier<CategoryState> {
   void setSelectedColor(String value) {
     state = state.copyWith(selectedColor: value);
   }
+
+  void setSelectCategoryId(int? categoryId) {
+    state = state.copyWith(selectedCategoryId: categoryId);
+  }
+
+  int? get selectedCategoryId => state.selectedCategoryId;
+  String? get selectedColor => state.selectedColor;
 }
