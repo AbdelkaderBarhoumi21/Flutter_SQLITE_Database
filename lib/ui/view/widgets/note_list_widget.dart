@@ -68,7 +68,7 @@ class _NoteListWidgetState extends ConsumerState<NoteListWidget> {
               children: [
                 Text(note.title),
                 const Spacer(),
-                Text(note.categoryId.toString()),
+                Text(note.categoryName.toString()),
               ],
             ),
             subtitle: Text(note.description ?? ' Description is empty'),
