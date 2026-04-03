@@ -64,7 +64,13 @@ class _NoteListWidgetState extends ConsumerState<NoteListWidget> {
           },
 
           child: ListTile(
-            title: Text(note.title),
+            title: Row(
+              children: [
+                Text(note.title),
+                const Spacer(),
+                Text(note.categoryId.toString()),
+              ],
+            ),
             subtitle: Text(note.description ?? ' Description is empty'),
             leading: Checkbox(value: note.isCompleted, onChanged: (value) {}),
             trailing: IconButton(

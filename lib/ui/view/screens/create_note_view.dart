@@ -42,6 +42,9 @@ class _CreateNoteViewState extends ConsumerState<CreateNoteView> {
       ref
           .read(noteViewModelProvider.notifier)
           .insertNote(title, description, categoryId);
+
+      // Reset category state so the next Create Note screen starts with no category pre-selected
+      ref.invalidate(categoryViewModelProvider);
       Navigator.pop(context);
     }
   }
@@ -61,6 +64,7 @@ class _CreateNoteViewState extends ConsumerState<CreateNoteView> {
           child: Form(
             key: _formKey,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextFormField(
                   controller: _titleController,
