@@ -7,6 +7,7 @@ abstract class NoteModel with _$NoteModel {
   factory NoteModel({
     required int id,
     required String title,
+    @Default(1) int categoryId,
     String? description,
     @Default(false) bool isCompleted,
     required String createdAt,
@@ -14,6 +15,7 @@ abstract class NoteModel with _$NoteModel {
 
   factory NoteModel.fromEntity(NoteTableData note) => NoteModel(
     id: note.id,
+    categoryId: note.categoryId ?? 1,
     title: note.title,
     description: note.description,
     isCompleted: note.isCompleted,

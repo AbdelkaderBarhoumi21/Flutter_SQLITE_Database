@@ -28,7 +28,7 @@ AppDatabase appDatabase(Ref ref) {
 )
 class AppDatabase extends _$AppDatabase {
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
   AppDatabase() : super(_openConnection());
 
   static QueryExecutor _openConnection() {
@@ -46,11 +46,15 @@ class AppDatabase extends _$AppDatabase {
       if (from < 2) {
         return m.createTable(categoriesTable);
       }
+
+      if (from < 3) {
+        return m.addColumn(noteTable, noteTable.categoryId);
+      }
     },
     beforeOpen: (details) async {
       // This will be executed when the database is opened, and before the [onCreate] or [onUpgrade] callbacks are called.
       // and before any other queries will be sent.
-      // it enables SQLite foreign key enforcement with PRAGMA foreign_keys=ON. By default SQLite ignores foreign key constraints, 
+      // it enables SQLite foreign key enforcement with PRAGMA foreign_keys=ON. By default SQLite ignores foreign key constraints,
       // so you have to enable it manually for each connection. This ensures that your database maintains referential integrity by enforcing foreign key constraints.
       await customStatement('PRAGMA foreign_keys=ON');
     },
