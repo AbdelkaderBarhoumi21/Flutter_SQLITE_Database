@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_sqlite_database/ui/view/widgets/select_category_widget.dart';
+import 'package:flutter_sqlite_database/ui/view_models/category_view_model.dart';
 import 'package:flutter_sqlite_database/ui/view_models/note_view_model.dart';
 
 class CreateNoteView extends ConsumerStatefulWidget {
@@ -32,9 +34,14 @@ class _CreateNoteViewState extends ConsumerState<CreateNoteView> {
     if (isValid) {
       final title = _titleController.text;
       final description = _descriptionController.text;
+      final categoryId = ref
+          .read(categoryViewModelProvider.notifier)
+          .getSelectedCategoryId;
 
       // insert the note
-      ref.read(noteViewModelProvider.notifier).insertNote(title, description);
+      ref
+          .read(noteViewModelProvider.notifier)
+          .insertNote(title, description, categoryId);
       Navigator.pop(context);
     }
   }
@@ -84,6 +91,8 @@ class _CreateNoteViewState extends ConsumerState<CreateNoteView> {
                     return null;
                   },
                 ),
+                SizedBox(height: 18),
+                SelectCategoryWidget(),
               ],
             ),
           ),

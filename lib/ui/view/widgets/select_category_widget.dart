@@ -14,6 +14,7 @@ class SelectCategoryWidget extends ConsumerWidget {
       categoryViewModelProvider.select((value) => value.selectedCategoryId),
     );
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
           'Category',
@@ -31,14 +32,16 @@ class SelectCategoryWidget extends ConsumerWidget {
                   return ChoiceChip(
                     backgroundColor: Colors.grey[200],
                     selectedColor: Colors.blueAccent,
+                    checkmarkColor: Colors.white,
+
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
+                      borderRadius: BorderRadius.circular(24.0),
                     ),
                     label: Text(
                       category.name,
                       style: TextStyle(
                         color: selectedCategoryId == category.id
-                            ? Colors.blue[700]
+                            ? Colors.white
                             : Colors.black,
                       ),
                     ),

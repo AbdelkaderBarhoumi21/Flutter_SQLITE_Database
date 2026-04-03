@@ -43,11 +43,12 @@ class NoteRepository {
   }
 
   /// Insert a new note into the database
-  Future<int> insertNote(String title, String description) async {
+  Future<int> insertNote(String title, String description,int categoryId) async {
     try {
       final note = NoteTableCompanion(
         title: Value(title),
         description: Value(description),
+        categoryId: Value(categoryId)
       );
       final data = await noteDao.insertNote(note);
       return data;
